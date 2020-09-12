@@ -1,6 +1,6 @@
 {
     "name": "dev-packages/data-to-files",
-    "description": "Conver An Array Of Data, Into Multiple Files Types",
+    "description": "Convert An Array Of Data, Into Multiple Files Types",
     "type": "library",
     "license": "MIT",
     "authors": [
