@@ -1,0 +1,34 @@
+{
+    "number": {
+        "headers": true,
+        "columns": [
+            {
+                "name": "portNumber",
+                "title": "Port Number"
+            },
+            {
+                "name": "Number",
+                "title": "Number"
+            }
+        ],
+        "separate": "   "
+    },
+    "user": {
+        "headers": true,
+        "columns": [
+            {
+                "name": "name",
+                "title": "Name"
+            },
+            {
+                "name": "age",
+                "title": "Age"
+            },
+            {
+                "name": "country",
+                "title": "Country"
+            }
+        ],
+        "separate": "   "
+    }
+}

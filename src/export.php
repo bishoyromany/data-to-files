@@ -23,6 +23,11 @@ class Export
     private $fileName = 'defaultName';
 
     /**
+     * ? Export Map Files Path & Name
+     */
+    private $exportFilePathName;
+
+    /**
      * ? Download Map Settings
      */
     private $exportMap = [
@@ -52,24 +57,17 @@ class Export
             $this->fileName = $settings['fileName'];
         }
 
-        if (isset($settings['section'])) {
-            if ($settings['section'] == 'numbers') {
-                $this->exportMap = [
-                    'headers' => false,
-                    'columns' => [
-                        [
-                            'name' => 'portNumber',
-                            'title' => 'Port Number',
-                        ],
-                        [
-                            'name' => 'number',
-                            'title' => 'Number'
-                        ]
-                    ],
-                    'separate' => ' ',
-                ];
+        $this->exportFilePathName = $settings['exportMapFile'] ?? __DIR__ . "/../tests/customMaps.json";
+
+        if (isset($settings['customMap'])) {
+            $map = json_decode(file_get_contents($this->exportFilePathName), true)[$settings['customMap']] ?? false;
+            if ($map) {
+                $this->exportMap = $map;
+            } else {
+                throw new \Exception("Custom Map Not Found In " . $this->exportFilePathName . " File");
             }
-            $this->exportExtenstion = $settings['exportType'];
+        } else {
+            $this->exportMap = array_merge($this->exportMap, $settings['exportMap']);
         }
 
         $this->data = $data;
