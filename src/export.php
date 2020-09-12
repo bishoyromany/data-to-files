@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * This Class Takes An Array Of Settings, And Other Array Of Data,
+ * Settings Array Should Contain
+ * @param bool headers      | The File Should Have Headers
+ * @param array columns     | List Of Allowed Columns, ['name' => The Key In Array, 'title' => Title Of The Column For Headers]
+ * @param string separate   | Required For Text Files
+ */
+
 namespace devPackages\dataToFiles;
 
 class Export
