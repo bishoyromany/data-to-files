@@ -1,0 +1,19 @@
+{
+    "name": "dev-packages/data-to-files",
+    "description": "Conver An Array Of Data, Into Multiple Files Types",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Bishoy Romany",
+            "email": "7bishoyromany7@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "devPackages\\dataToFiles\\": "src/"
+        }
+    },
+    "minimum-stability": "stable",
+    "require": {}
+}
