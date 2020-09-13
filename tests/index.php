@@ -40,7 +40,7 @@ $exportInstance->setUp([
     //     'columns'       => $columns,
     //     'separate'      => '   ',
     // ],
-    'exportType'    => 'txt',
+    'exportType'    => 'csv',
     'fileName'      => 'Export Test',
     'exportMapFile' => __DIR__ . "/../tests/customMaps.json",
     'customMap'     => 'user'

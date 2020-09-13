@@ -114,7 +114,10 @@ class Export
         foreach ($this->data as $data) {
             if ($this->exportExtenstion == 'txt') {
                 $this->fileContent .= $this->generateTxtFileContent($data, $x, $this->exportMap['separate']);
+            } elseif ($this->exportExtenstion == 'csv') {
+                $this->fileContent .= $this->generateCSVFileContent($data, $x, $this->exportMap['separate']);
             }
+
             $x++;
         }
         return $this;
@@ -133,7 +136,31 @@ class Export
         }
         foreach ($data as $d) {
             if ($x !== 0 && $x <= $totalRows) {
-                $row .= $separate;
+                $row .= ',';
+            }
+
+            $row .= $d;
+
+            $x++;
+        }
+
+        return $row;
+    }
+
+    /**
+     * ? Create The Download Text For CSV Files Download
+     */
+    private static function generateCSVFileContent(array $data, Int $currentRecord, String $separate): String
+    {
+        $row = "";
+        $totalRows = count($data);
+        $x = 0;
+        if ($currentRecord) {
+            $row .= "\n";
+        }
+        foreach ($data as $d) {
+            if ($x !== 0 && $x <= $totalRows) {
+                $row .= ',' . $separate;
             }
 
             $row .= $d;
@@ -151,14 +178,31 @@ class Export
     {
         $fileName = $this->fileName . '.' . $this->exportExtenstion;
         if ($this->exportExtenstion == 'txt') {
-            return $this->downloadText($this->fileContent, $fileName);
+            $file = $this->downloadText($this->fileContent);
+        } elseif ($this->exportExtenstion == 'csv') {
+            $file = $this->downloadCSV($this->fileContent);
         }
+
+        header('Content-Description: File Transfer');
+        header('Content-Type: ' . $file['contentType']);
+        header('Content-Disposition: attachment; filename=' . $fileName);
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($file['file']));
+
+        ob_clean();
+        flush();
+        readfile($file['file']);
+
+        unlink($file['file']);
     }
 
     /**
      * ? Download Text File
      */
-    public static function downloadText(String $content, String $fileName)
+    public static function downloadText(String $content): array
     {
         $tmpName = tempnam(sys_get_temp_dir(), 'data');
         $file = fopen($tmpName, 'w');
@@ -166,20 +210,27 @@ class Export
         fwrite($file, $content);
         fclose($file);
 
-        header('Content-Description: File Transfer');
-        header('Content-Type: text/txt');
-        header('Content-Disposition: attachment; filename=' . $fileName);
-        header('Content-Transfer-Encoding: binary');
-        header('Expires: 0');
-        header('Cache-Control: must-revalidate');
-        header('Pragma: public');
-        header('Content-Length: ' . filesize($tmpName));
+        return [
+            'contentType' => 'text/txt',
+            'file'        => $tmpName,
+        ];
+    }
 
-        ob_clean();
-        flush();
-        readfile($tmpName);
+    /**
+     * ? Download CSV
+     */
+    public static function downloadCSV(String $content): array
+    {
+        $tmpName = tempnam(sys_get_temp_dir(), 'data');
+        $file = fopen($tmpName, 'w');
 
-        unlink($tmpName);
+        fwrite($file, $content);
+        fclose($file);
+
+        return [
+            'contentType' => 'application/csv',
+            'file'        => $tmpName,
+        ];
     }
 
     /**
